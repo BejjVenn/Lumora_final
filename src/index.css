@@ -1,96 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Lumora Mental Wellness Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    /* Therapeutic Color Palette */
+    --background: 220 60% 99%;
+    --foreground: 225 25% 20%;
+    
+    /* Soft Blue Primary - Calming and trustworthy */
+    --primary: 230 85% 70%;
+    --primary-light: 230 85% 85%;
+    --primary-dark: 230 85% 55%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Lavender Secondary - Soothing and gentle */
+    --secondary: 280 60% 80%;
+    --secondary-light: 280 60% 92%;
+    --secondary-foreground: 225 25% 20%;
+    
+    /* Mint Accent - Fresh and hopeful */
+    --accent: 140 50% 75%;
+    --accent-light: 140 50% 88%;
+    --accent-foreground: 225 25% 20%;
+    
+    /* Card and UI Elements */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 225 25% 20%;
+    --card-soft: 220 60% 97%;
+    
+    /* Borders and Inputs */
+    --border: 220 25% 90%;
+    --input: 220 25% 95%;
+    --ring: 230 85% 70%;
+    
+    /* Muted Elements */
+    --muted: 220 25% 95%;
+    --muted-foreground: 225 15% 50%;
+    
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --popover-foreground: 225 25% 20%;
+    
+    /* Destructive (for emergency/crisis) */
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Success (for positive moods) */
+    --success: 140 50% 60%;
+    --success-foreground: 0 0% 100%;
+    
+    /* Warning (for moderate stress) */
+    --warning: 45 90% 65%;
+    --warning-foreground: 225 25% 20%;
+    
+    /* Gradients for backgrounds */
+    --gradient-primary: linear-gradient(135deg, hsl(230 85% 80%), hsl(220 60% 99%));
+    --gradient-secondary: linear-gradient(135deg, hsl(280 60% 85%), hsl(230 85% 90%));
+    --gradient-accent: linear-gradient(135deg, hsl(140 50% 80%), hsl(180 50% 85%));
+    --gradient-calm: linear-gradient(180deg, hsl(220 60% 98%), hsl(230 85% 95%));
+    
+    /* Shadows for depth */
+    --shadow-soft: 0 4px 20px -2px hsl(230 85% 70% / 0.1);
+    --shadow-medium: 0 8px 30px -4px hsl(230 85% 70% / 0.15);
+    --shadow-strong: 0 12px 40px -6px hsl(230 85% 70% / 0.2);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Spacing and sizing */
+    --radius: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-full: 9999px;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 225 25% 8%;
+    --foreground: 220 60% 95%;
+    
+    --primary: 230 85% 75%;
+    --primary-light: 230 85% 85%;
+    --primary-dark: 230 85% 65%;
+    --primary-foreground: 225 25% 8%;
+    
+    --secondary: 280 60% 70%;
+    --secondary-light: 280 60% 80%;
+    --secondary-foreground: 220 60% 95%;
+    
+    --accent: 140 50% 70%;
+    --accent-light: 140 50% 80%;
+    --accent-foreground: 225 25% 8%;
+    
+    --card: 225 25% 12%;
+    --card-foreground: 220 60% 95%;
+    --card-soft: 225 25% 10%;
+    
+    --border: 225 25% 20%;
+    --input: 225 25% 15%;
+    --ring: 230 85% 75%;
+    
+    --muted: 225 25% 15%;
+    --muted-foreground: 220 25% 60%;
+    
+    --popover: 225 25% 12%;
+    --popover-foreground: 220 60% 95%;
+    
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 140 50% 55%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 45 90% 60%;
+    --warning-foreground: 225 25% 8%;
   }
 }
 
@@ -98,8 +125,189 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@layer components {
+  /* Therapeutic button variants */
+  .btn-therapy {
+    @apply px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105;
+    background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-light)));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 4px 20px -2px hsl(var(--primary) / 0.1);
+  }
+  
+  .btn-therapy:hover {
+    box-shadow: 0 8px 30px -4px hsl(var(--primary) / 0.15);
+  }
+  
+  .btn-gentle {
+    @apply px-6 py-3 rounded-full font-medium border transition-all duration-300;
+    background: hsl(var(--card-soft));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--border));
+  }
+  
+  .btn-gentle:hover {
+    background: hsl(var(--secondary-light));
+    border-color: hsl(var(--secondary));
+  }
+  
+  .btn-calm {
+    @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
+    background: hsl(var(--accent-light));
+    color: hsl(var(--accent-foreground));
+  }
+  
+  .btn-calm:hover {
+    background: hsl(var(--accent));
+  }
+  
+  /* Card variants for different moods */
+  .card-therapy {
+    @apply rounded-xl border p-6 transition-all duration-300;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+    box-shadow: 0 4px 20px -2px hsl(var(--primary) / 0.1);
+  }
+  
+  .card-therapy:hover {
+    box-shadow: 0 8px 30px -4px hsl(var(--primary) / 0.15);
+  }
+  
+  .card-mood {
+    @apply rounded-xl border p-6 transition-all duration-300 hover:scale-[1.02];
+    background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--card-soft)));
+    border-color: hsl(var(--border) / 0.5);
+    box-shadow: 0 4px 20px -2px hsl(var(--primary) / 0.1);
+  }
+  
+  .card-mood:hover {
+    box-shadow: 0 8px 30px -4px hsl(var(--primary) / 0.15);
+  }
+  
+  .card-chat {
+    @apply rounded-2xl border p-4 backdrop-blur-sm;
+    background: hsl(var(--card));
+    border-color: hsl(var(--border) / 0.3);
+    box-shadow: 0 4px 20px -2px hsl(var(--primary) / 0.1);
+  }
+  
+  /* Mood indicator animations */
+  .mood-indicator {
+    @apply w-12 h-12 rounded-full flex items-center justify-center text-xl transition-all duration-300 hover:scale-110 cursor-pointer;
+  }
+  
+  .mood-very-sad {
+    @apply bg-red-100 text-red-600 hover:bg-red-200;
+  }
+  
+  .mood-sad {
+    @apply bg-orange-100 text-orange-600 hover:bg-orange-200;
+  }
+  
+  .mood-neutral {
+    @apply bg-yellow-100 text-yellow-600 hover:bg-yellow-200;
+  }
+  
+  .mood-happy {
+    @apply bg-green-100 text-green-600 hover:bg-green-200;
+  }
+  
+  .mood-very-happy {
+    @apply bg-emerald-100 text-emerald-600 hover:bg-emerald-200;
+  }
+  
+  /* Breathing exercise animation */
+  .breathing-circle {
+    @apply w-32 h-32 rounded-full;
+    background: linear-gradient(to bottom right, hsl(var(--primary-light)), hsl(var(--accent-light)));
+    box-shadow: 0 8px 30px -4px hsl(var(--primary) / 0.15);
+    animation: breathe 4s ease-in-out infinite;
+  }
+  
+  @keyframes breathe {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+  }
+  
+  /* Fade in animations */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer utilities {
+  .font-inter {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .bg-gradient-therapy {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-calm {
+    background: var(--gradient-calm);
+  }
+  
+  .shadow-therapy {
+    box-shadow: var(--shadow-soft);
   }
 }
