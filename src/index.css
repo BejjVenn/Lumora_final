@@ -4,122 +4,110 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Lumora Mental Wellness Design System - All colors MUST be HSL */
-
-@layer base {
-  :root {
-    /* Therapeutic Color Palette */
-    --background: 220 60% 99%;
-    --foreground: 225 25% 20%;
-    
-    /* Soft Blue Primary - Calming and trustworthy */
-    --primary: 230 85% 70%;
-    --primary-light: 230 85% 85%;
-    --primary-dark: 230 85% 55%;
-    --primary-foreground: 0 0% 100%;
-    
-    /* Lavender Secondary - Soothing and gentle */
-    --secondary: 280 60% 80%;
-    --secondary-light: 280 60% 92%;
-    --secondary-foreground: 225 25% 20%;
-    
-    /* Mint Accent - Fresh and hopeful */
-    --accent: 140 50% 75%;
-    --accent-light: 140 50% 88%;
-    --accent-foreground: 225 25% 20%;
-    
-    /* Card and UI Elements */
-    --card: 0 0% 100%;
-    --card-foreground: 225 25% 20%;
-    --card-soft: 220 60% 97%;
-    
-    /* Borders and Inputs */
-    --border: 220 25% 90%;
-    --input: 220 25% 95%;
-    --ring: 230 85% 70%;
-    
-    /* Muted Elements */
-    --muted: 220 25% 95%;
-    --muted-foreground: 225 15% 50%;
-    
-    /* Popover */
-    --popover: 0 0% 100%;
-    --popover-foreground: 225 25% 20%;
-    
-    /* Destructive (for emergency/crisis) */
-    --destructive: 0 70% 65%;
-    --destructive-foreground: 0 0% 100%;
-    
-    /* Success (for positive moods) */
-    --success: 140 50% 60%;
-    --success-foreground: 0 0% 100%;
-    
-    /* Warning (for moderate stress) */
-    --warning: 45 90% 65%;
-    --warning-foreground: 225 25% 20%;
-    
-    /* Gradients for backgrounds */
-    --gradient-primary: linear-gradient(135deg, hsl(230 85% 80%), hsl(220 60% 99%));
-    --gradient-secondary: linear-gradient(135deg, hsl(280 60% 85%), hsl(230 85% 90%));
-    --gradient-accent: linear-gradient(135deg, hsl(140 50% 80%), hsl(180 50% 85%));
-    --gradient-calm: linear-gradient(180deg, hsl(220 60% 98%), hsl(230 85% 95%));
-    
-    /* Shadows for depth */
-    --shadow-soft: 0 4px 20px -2px hsl(230 85% 70% / 0.1);
-    --shadow-medium: 0 8px 30px -4px hsl(230 85% 70% / 0.15);
-    --shadow-strong: 0 12px 40px -6px hsl(230 85% 70% / 0.2);
-    
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    
-    /* Spacing and sizing */
-    --radius: 1rem;
-    --radius-lg: 1.5rem;
-    --radius-full: 9999px;
-  }
-
-  .dark {
-    --background: 225 25% 8%;
-    --foreground: 220 60% 95%;
-    
-    --primary: 230 85% 75%;
-    --primary-light: 230 85% 85%;
-    --primary-dark: 230 85% 65%;
-    --primary-foreground: 225 25% 8%;
-    
-    --secondary: 280 60% 70%;
-    --secondary-light: 280 60% 80%;
-    --secondary-foreground: 220 60% 95%;
-    
-    --accent: 140 50% 70%;
-    --accent-light: 140 50% 80%;
-    --accent-foreground: 225 25% 8%;
-    
-    --card: 225 25% 12%;
-    --card-foreground: 220 60% 95%;
-    --card-soft: 225 25% 10%;
-    
-    --border: 225 25% 20%;
-    --input: 225 25% 15%;
-    --ring: 230 85% 75%;
-    
-    --muted: 225 25% 15%;
-    --muted-foreground: 220 25% 60%;
-    
-    --popover: 225 25% 12%;
-    --popover-foreground: 220 60% 95%;
-    
-    --destructive: 0 70% 60%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --success: 140 50% 55%;
-    --success-foreground: 0 0% 100%;
-    
-    --warning: 45 90% 60%;
-    --warning-foreground: 225 25% 8%;
-  }
+/* CSS variables are defined here, outside of any @layer blocks */
+:root {
+  /* Therapeutic Color Palette */
+  --background: 220 60% 99%;
+  --foreground: 225 25% 20%;
+  
+  /* Soft Blue Primary - Calming and trustworthy */
+  --primary: 230 85% 70%;
+  --primary-light: 230 85% 85%;
+  --primary-dark: 230 85% 55%;
+  --primary-foreground: 0 0% 100%;
+  
+  /* Lavender Secondary - Soothing and gentle */
+  --secondary: 280 60% 80%;
+  --secondary-light: 280 60% 92%;
+  --secondary-foreground: 225 25% 20%;
+  
+  /* Mint Accent - Fresh and hopeful */
+  --accent: 140 50% 75%;
+  --accent-light: 140 50% 88%;
+  --accent-foreground: 225 25% 20%;
+  
+  /* Card and UI Elements */
+  --card: 0 0% 100%;
+  --card-foreground: 225 25% 20%;
+  --card-soft: 220 60% 97%;
+  
+  /* Borders and Inputs */
+  --border: 220 25% 90%;
+  --input: 220 25% 95%;
+  --ring: 230 85% 70%;
+  
+  /* Muted Elements */
+  --muted: 220 25% 95%;
+  --muted-foreground: 225 15% 50%;
+  
+  /* Popover */
+  --popover: 0 0% 100%;
+  --popover-foreground: 225 25% 20%;
+  
+  /* Destructive (for emergency/crisis) */
+  --destructive: 0 70% 65%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Success (for positive moods) */
+  --success: 140 50% 60%;
+  --success-foreground: 0 0% 100%;
+  
+  /* Warning (for moderate stress) */
+  --warning: 45 90% 65%;
+  --warning-foreground: 225 25% 20%;
+  
+  /* Gradients for backgrounds */
+  --gradient-primary: linear-gradient(135deg, hsl(230 85% 80%), hsl(220 60% 99%));
+  --gradient-secondary: linear-gradient(135deg, hsl(280 60% 85%), hsl(230 85% 90%));
+  --gradient-accent: linear-gradient(135deg, hsl(140 50% 80%), hsl(180 50% 85%));
+  --gradient-calm: linear-gradient(180deg, hsl(220 60% 98%), hsl(230 85% 95%));
+  
+  /* Shadows for depth */
+  --shadow-soft: 0 4px 20px -2px hsl(230 85% 70% / 0.1);
+  --shadow-medium: 0 8px 30px -4px hsl(230 85% 70% / 0.15);
+  --shadow-strong: 0 12px 40px -6px hsl(230 85% 70% / 0.2);
+  
+  /* Animations */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Spacing and sizing */
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-full: 9999px;
 }
+
+.dark {
+  --background: 225 25% 8%;
+  --foreground: 220 60% 95%;
+  --primary: 230 85% 75%;
+  --primary-light: 230 85% 85%;
+  --primary-dark: 230 85% 65%;
+  --primary-foreground: 225 25% 8%;
+  --secondary: 280 60% 70%;
+  --secondary-light: 280 60% 80%;
+  --secondary-foreground: 220 60% 95%;
+  --accent: 140 50% 70%;
+  --accent-light: 140 50% 80%;
+  --accent-foreground: 225 25% 8%;
+  --card: 225 25% 12%;
+  --card-foreground: 220 60% 95%;
+  --card-soft: 225 25% 10%;
+  --border: 225 25% 20%;
+  --input: 225 25% 15%;
+  --ring: 230 85% 75%;
+  --muted: 225 25% 15%;
+  --muted-foreground: 220 25% 60%;
+  --popover: 225 25% 12%;
+  --popover-foreground: 220 60% 95%;
+  --destructive: 0 70% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 140 50% 55%;
+  --success-foreground: 0 0% 100%;
+  --warning: 45 90% 60%;
+  --warning-foreground: 225 25% 8%;
+}
+
 
 @layer base {
   * {

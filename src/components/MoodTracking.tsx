@@ -1,13 +1,14 @@
+// src/components/MoodTracking.tsx
+
 import { useState } from "react";
 import { ArrowLeft, Send, TrendingUp, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-
-// ✨ --- Firebase Imports --- ✨
 import { auth, db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
+// ... (The rest of the complete MoodTracking component code) ...
 interface MoodTrackingProps {
   onBack: () => void;
 }

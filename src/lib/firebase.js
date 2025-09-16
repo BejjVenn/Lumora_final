@@ -11,15 +11,14 @@ import { getFirestore } from "firebase/firestore";
 // 2. Your web app's Firebase configuration
 // BEST PRACTICE: Store these values in an .env.local file
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBuQmN4kw3PfX8K2yEvMv_Z01ocKb8Z3wI",
   authDomain: "lumora-3c148.firebaseapp.com",
   projectId: "lumora-3c148",
-  storageBucket: "lumora-3c148.appspot.com", // Corrected storageBucket URL
+  storageBucket: "lumora-3c148.firebasestorage.app",
   messagingSenderId: "808838475963",
-  appId: "1:808838475963:web:9fdea845b280a12cf0f99e",
-  measurementId: "G-WTZRP6GJDQ"
+  appId: "1:808838475963:web:be9d024906957b5bf0f99e",
+  measurementId: "G-PR96JPT7MM"
 };
-
 // 3. Initialize Firebase
 const app = initializeApp(firebaseConfig);
 

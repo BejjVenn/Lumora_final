@@ -1,164 +1,86 @@
-import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import WelcomeScreen from "@/components/WelcomeScreen";
-import Login from "@/components/Login";
-import Register from "@/components/Register";
-import HomeDashboard from "@/components/HomeDashboard";
-import MoodTracking from "@/components/MoodTracking";
-import AIChat from "@/components/AIChat";
+import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
-type Screen = "welcome" | "login" | "register" | "home" | "mood" | "chat" | "journal" | "breathing" | "profile" | "progress";
+// Import all of your page components
+import HomeDashboard from '@/components/HomeDashboard';
+import Login from '@/components/Login';
+import Register from '@/components/Register';
+import AIChat from '@/components/AIChat';
+import MoodTracking from '@/components/MoodTracking';
+import ProfileSettings from '@/components/ProfileSettings';
+
+// A simple loading component to show while Firebase checks authentication
+const FullScreenLoader = () => (
+  <div className="min-h-screen bg-gradient-calm flex items-center justify-center">
+    <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+  </div>
+);
 
 const Index = () => {
   const { user, loading } = useAuth();
-  const [currentScreen, setCurrentScreen] = useState<Screen>("welcome");
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [screen, setScreen] = useState('home'); // Manages navigation inside the app
+  const [authScreen, setAuthScreen] = useState('login'); // Toggles between login/register
 
-  const handleGetStarted = () => {
-    setCurrentScreen("login");
-  };
-
-  const handleNavigate = (screen: string) => {
-    setCurrentScreen(screen as Screen);
-  };
-
-  const handleBack = () => {
-    if (user) {
-      setCurrentScreen("home");
-    } else {
-      setCurrentScreen("welcome");
-    }
-  };
-
-  const handleLoginSuccess = () => {
-    setHasCompletedOnboarding(true);
-    setCurrentScreen("home");
-  };
-
-  const handleRegisterSuccess = () => {
-    setCurrentScreen("login");
-  };
-
+  // 1. Show a loader while Firebase initializes
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-calm flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-pulse mb-4">
-            <div className="h-8 w-32 bg-primary/20 rounded mx-auto"></div>
-          </div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
+    return <FullScreenLoader />;
   }
 
-  // Show welcome screen for first-time users
-  if (!user && currentScreen === "welcome") {
-    return <WelcomeScreen onGetStarted={handleGetStarted} />;
+  // 2. If a user is logged in, show the main application
+  if (user) {
+    switch (screen) {
+      case 'home':
+        return <HomeDashboard onNavigate={setScreen} />;
+      case 'chat':
+        return <AIChat onBack={() => setScreen('home')} />;
+      case 'mood':
+        return <MoodTracking onBack={() => setScreen('home')} />;
+      case 'profile':
+        return <ProfileSettings onBack={() => setScreen('home')} />;
+      // --- Add cases for other screens as you build them ---
+      // case 'journal':
+      //   return <Journal onBack={() => setScreen('home')} />;
+      // case 'breathing':
+      //   return <BreathingExercise onBack={() => setScreen('home')} />;
+      // case 'progress':
+      //   return <Progress onBack={() => setScreen('home')} />;
+      default:
+        return <HomeDashboard onNavigate={setScreen} />;
+    }
   }
 
-  // Show login screen
-  if (!user && currentScreen === "login") {
-    return (
-      <Login
-        onBack={() => setCurrentScreen("welcome")}
-        onNavigateToRegister={() => setCurrentScreen("register")}
-        onLoginSuccess={handleLoginSuccess}
-      />
-    );
-  }
-
-  // Show register screen
-  if (!user && currentScreen === "register") {
-    return (
-      <Register
-        onBack={() => setCurrentScreen("login")}
-        onNavigateToLogin={() => setCurrentScreen("login")}
-        onRegisterSuccess={handleRegisterSuccess}
-      />
-    );
-  }
-
-  // Redirect to login if not authenticated
+  // 3. If no user is logged in, show the authentication flow
   if (!user) {
-    return (
-      <Login
-        onBack={() => setCurrentScreen("welcome")}
-        onNavigateToRegister={() => setCurrentScreen("register")}
-        onLoginSuccess={handleLoginSuccess}
-      />
-    );
+    switch (authScreen) {
+      case 'login':
+        return (
+          <Login
+            onNavigateToRegister={() => setAuthScreen('register')}
+            onLoginSuccess={() => {}} // AuthProvider handles state change automatically
+            onBack={() => setAuthScreen('login')} // Or a potential 'welcome' screen
+          />
+        );
+      case 'register':
+        return (
+          <Register
+            onNavigateToLogin={() => setAuthScreen('login')}
+            onRegisterSuccess={() => setAuthScreen('login')} // Guide user to login after registering
+            onBack={() => setAuthScreen('login')}
+          />
+        );
+      default:
+        return (
+          <Login
+            onNavigateToRegister={() => setAuthScreen('register')}
+            onLoginSuccess={() => {}}
+            onBack={() => {}}
+          />
+        );
+    }
   }
 
-  // Render current screen for authenticated users
-  switch (currentScreen) {
-    case "home":
-      return <HomeDashboard onNavigate={handleNavigate} userName={user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Friend"} />;
-    
-    case "mood":
-      return <MoodTracking onBack={handleBack} />;
-    
-    case "chat":
-      return <AIChat onBack={handleBack} />;
-    
-    case "journal":
-      return (
-        <div className="min-h-screen bg-gradient-calm flex items-center justify-center p-4">
-          <div className="card-therapy text-center max-w-md mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Daily Journal</h2>
-            <p className="text-muted-foreground mb-6">Coming soon! A beautiful space for your thoughts and reflections.</p>
-            <button onClick={handleBack} className="btn-therapy">
-              Back to Home
-            </button>
-          </div>
-        </div>
-      );
-    
-    case "breathing":
-      return (
-        <div className="min-h-screen bg-gradient-calm flex items-center justify-center p-4">
-          <div className="card-therapy text-center max-w-md mx-auto">
-            <div className="breathing-circle mx-auto mb-6"></div>
-            <h2 className="text-xl font-semibold mb-4">Breathing Exercise</h2>
-            <p className="text-muted-foreground mb-6">
-              Focus on the circle above. Breathe in as it expands, breathe out as it contracts.
-            </p>
-            <button onClick={handleBack} className="btn-therapy">
-              Back to Home
-            </button>
-          </div>
-        </div>
-      );
-    
-    case "profile":
-      return (
-        <div className="min-h-screen bg-gradient-calm flex items-center justify-center p-4">
-          <div className="card-therapy text-center max-w-md mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Profile & Settings</h2>
-            <p className="text-muted-foreground mb-6">Manage your account and preferences.</p>
-            <button onClick={handleBack} className="btn-therapy">
-              Back to Home
-            </button>
-          </div>
-        </div>
-      );
-    
-    case "progress":
-      return (
-        <div className="min-h-screen bg-gradient-calm flex items-center justify-center p-4">
-          <div className="card-therapy text-center max-w-md mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Your Progress</h2>
-            <p className="text-muted-foreground mb-6">Track your wellness journey over time.</p>
-            <button onClick={handleBack} className="btn-therapy">
-              Back to Home
-            </button>
-          </div>
-        </div>
-      );
-    
-    default:
-      return <HomeDashboard onNavigate={handleNavigate} userName="Friend" />;
-  }
+  // Fallback return
+  return <FullScreenLoader />;
 };
 
 export default Index;
