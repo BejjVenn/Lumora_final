@@ -1,18 +1,21 @@
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import WelcomeScreen from "@/components/WelcomeScreen";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 import HomeDashboard from "@/components/HomeDashboard";
 import MoodTracking from "@/components/MoodTracking";
 import AIChat from "@/components/AIChat";
 
-type Screen = "welcome" | "home" | "mood" | "chat" | "journal" | "breathing" | "profile" | "progress";
+type Screen = "welcome" | "login" | "register" | "home" | "mood" | "chat" | "journal" | "breathing" | "profile" | "progress";
 
 const Index = () => {
+  const { user, loading } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>("welcome");
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
 
   const handleGetStarted = () => {
-    setHasCompletedOnboarding(true);
-    setCurrentScreen("home");
+    setCurrentScreen("login");
   };
 
   const handleNavigate = (screen: string) => {
@@ -20,18 +23,77 @@ const Index = () => {
   };
 
   const handleBack = () => {
+    if (user) {
+      setCurrentScreen("home");
+    } else {
+      setCurrentScreen("welcome");
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    setHasCompletedOnboarding(true);
     setCurrentScreen("home");
   };
 
+  const handleRegisterSuccess = () => {
+    setCurrentScreen("login");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-calm flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-pulse mb-4">
+            <div className="h-8 w-32 bg-primary/20 rounded mx-auto"></div>
+          </div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Show welcome screen for first-time users
-  if (!hasCompletedOnboarding && currentScreen === "welcome") {
+  if (!user && currentScreen === "welcome") {
     return <WelcomeScreen onGetStarted={handleGetStarted} />;
   }
 
-  // Render current screen
+  // Show login screen
+  if (!user && currentScreen === "login") {
+    return (
+      <Login
+        onBack={() => setCurrentScreen("welcome")}
+        onNavigateToRegister={() => setCurrentScreen("register")}
+        onLoginSuccess={handleLoginSuccess}
+      />
+    );
+  }
+
+  // Show register screen
+  if (!user && currentScreen === "register") {
+    return (
+      <Register
+        onBack={() => setCurrentScreen("login")}
+        onNavigateToLogin={() => setCurrentScreen("login")}
+        onRegisterSuccess={handleRegisterSuccess}
+      />
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return (
+      <Login
+        onBack={() => setCurrentScreen("welcome")}
+        onNavigateToRegister={() => setCurrentScreen("register")}
+        onLoginSuccess={handleLoginSuccess}
+      />
+    );
+  }
+
+  // Render current screen for authenticated users
   switch (currentScreen) {
     case "home":
-      return <HomeDashboard onNavigate={handleNavigate} userName="Friend" />;
+      return <HomeDashboard onNavigate={handleNavigate} userName={user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Friend"} />;
     
     case "mood":
       return <MoodTracking onBack={handleBack} />;
