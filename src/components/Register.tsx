@@ -4,7 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+// ✨ --- Firebase Imports --- ✨
+import { auth, db } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore"; 
+
 import { Mail, Phone, Chrome, ArrowLeft, User } from "lucide-react";
 
 interface RegisterProps {
@@ -24,53 +28,44 @@ const Register = ({ onBack, onNavigateToLogin, onRegisterSuccess }: RegisterProp
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  // ✨ --- Replaced with Firebase Email Auth --- ✨
   const handleEmailRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast({
-        title: "Password mismatch",
-        description: "Passwords do not match.",
-        variant: "destructive",
-      });
+      toast({ title: "Password mismatch", description: "Passwords do not match.", variant: "destructive" });
       return;
     }
-
     if (password.length < 6) {
-      toast({
-        title: "Password too short",
-        description: "Password must be at least 6 characters long.",
-        variant: "destructive",
-      });
+      toast({ title: "Password too short", description: "Password must be at least 6 characters long.", variant: "destructive" });
       return;
     }
 
     setLoading(true);
     
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            username,
-            full_name: fullName,
-          }
-        }
+      // 1. Create the user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 2. Update the user's profile with their full name
+      await updateProfile(user, { displayName: fullName });
+
+      // 3. Create a document in Firestore to store additional user info
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        username: username,
+        fullName: fullName,
+        email: email,
+        createdAt: serverTimestamp(),
       });
 
-      if (error) throw error;
-      
-      toast({
-        title: "Account created!",
-        description: "Please check your email for verification.",
-      });
+      toast({ title: "Account created!", description: "You have been successfully registered." });
       onRegisterSuccess();
     } catch (error: any) {
       toast({
         title: "Registration failed",
-        description: error.message,
+        description: error.message.replace('Firebase: ', ''), // Clean up Firebase error messages
         variant: "destructive",
       });
     } finally {
@@ -78,68 +73,60 @@ const Register = ({ onBack, onNavigateToLogin, onRegisterSuccess }: RegisterProp
     }
   };
 
-  const handlePhoneRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    try {
-      const { error } = await supabase.auth.signUp({
-        phone,
-        password,
-        options: {
-          data: {
-            username,
-            full_name: fullName,
-          }
-        }
-      });
-
-      if (error) throw error;
-      
-      toast({
-        title: "Verification sent!",
-        description: "Check your phone for the verification code.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Registration failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // ✨ --- Replaced with Firebase Google Auth --- ✨
   const handleGoogleRegister = async () => {
     setLoading(true);
+    const provider = new GoogleAuthProvider();
     
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-          queryParams: {
-            username,
-            full_name: fullName,
-          }
-        }
-      });
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-      if (error) throw error;
+      // Create a Firestore document for the new Google user
+      // setDoc is used to either create a new doc or update an existing one
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        username: username, // From the form state
+        fullName: user.displayName, // From the Google profile
+        email: user.email,
+        createdAt: serverTimestamp(),
+      }, { merge: true }); // Use merge to avoid overwriting data if user already exists
+
+      toast({ title: "Signed in with Google!", description: "Welcome to Lumora." });
+      onRegisterSuccess();
     } catch (error: any) {
       toast({
-        title: "Registration failed",
-        description: error.message,
+        title: "Google Sign-In failed",
+        description: error.message.replace('Firebase: ', ''),
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
     }
+  };
+
+  // ✨ --- Updated Phone Auth Stub --- ✨
+  const handlePhoneRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // NOTE: Firebase phone auth requires a multi-step process with reCAPTCHA.
+    // This is a placeholder to inform the user.
+    toast({
+      title: "Phone sign-up is coming soon!",
+      description: "This feature is under development. Please use Email or Google to register.",
+      variant: "default",
+    });
+    /* Firebase Phone Auth Steps:
+      1. Set up a reCAPTCHA verifier on this page.
+      2. Call `signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier)`.
+      3. This returns a confirmation result. Show a new input field for the OTP code.
+      4. Call `confirmationResult.confirm(otpCode)` to sign the user in.
+    */
   };
 
   return (
     <div className="min-h-screen bg-gradient-calm flex items-center justify-center p-4">
       <Card className="card-therapy w-full max-w-md p-6">
+        {/* --- No changes needed in the JSX below this line --- */}
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={onBack}
@@ -275,7 +262,7 @@ const Register = ({ onBack, onNavigateToLogin, onRegisterSuccess }: RegisterProp
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1234567890"
+                placeholder="+91 12345 67890"
                 required
               />
             </div>
@@ -291,7 +278,7 @@ const Register = ({ onBack, onNavigateToLogin, onRegisterSuccess }: RegisterProp
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? "Sending..." : "Continue with Phone"}
             </Button>
           </form>
         )}

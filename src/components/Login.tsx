@@ -4,7 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+// ✨ --- Firebase Imports --- ✨
+import { auth } from "@/lib/firebase";
+import { 
+  signInWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup 
+} from "firebase/auth";
 import { Mail, Phone, Chrome, ArrowLeft } from "lucide-react";
 
 interface LoginProps {
@@ -21,17 +27,13 @@ const Login = ({ onBack, onNavigateToRegister, onLoginSuccess }: LoginProps) => 
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  // ✨ --- Replaced with Firebase Email Auth --- ✨
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
+      await signInWithEmailAndPassword(auth, email, password);
       
       toast({
         title: "Welcome back!",
@@ -41,7 +43,7 @@ const Login = ({ onBack, onNavigateToRegister, onLoginSuccess }: LoginProps) => 
     } catch (error: any) {
       toast({
         title: "Login failed",
-        description: error.message,
+        description: error.message.replace('Firebase: ', ''), // Clean up Firebase error messages
         variant: "destructive",
       });
     } finally {
@@ -49,57 +51,51 @@ const Login = ({ onBack, onNavigateToRegister, onLoginSuccess }: LoginProps) => 
     }
   };
 
-  const handlePhoneLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        phone,
-      });
-
-      if (error) throw error;
-      
-      toast({
-        title: "Verification sent!",
-        description: "Check your phone for the verification code.",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Login failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // ✨ --- Replaced with Firebase Google Auth --- ✨
   const handleGoogleLogin = async () => {
     setLoading(true);
+    const provider = new GoogleAuthProvider();
     
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
+      await signInWithPopup(auth, provider);
+      
+      toast({
+        title: "Welcome back!",
+        description: "You've successfully signed in with Google.",
       });
-
-      if (error) throw error;
+      onLoginSuccess();
     } catch (error: any) {
       toast({
-        title: "Login failed",
-        description: error.message,
+        title: "Google Sign-In failed",
+        description: error.message.replace('Firebase: ', ''),
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
     }
+  };
+  
+  // ✨ --- Updated Phone Auth Stub --- ✨
+  const handlePhoneLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // NOTE: Firebase phone auth requires a multi-step process with reCAPTCHA.
+    // This is a placeholder to inform the user.
+    toast({
+      title: "Phone sign-in is coming soon!",
+      description: "This feature is under development. Please use Email or Google.",
+    });
+    /* To implement Firebase Phone Auth, you would need to:
+      1. Add a reCAPTCHA verifier to your UI (can be invisible).
+      2. Call `signInWithPhoneNumber` to send the OTP.
+      3. Update the UI to show an input field for the user to enter the OTP.
+      4. Call the `confirmationResult.confirm(otp)` method to sign the user in.
+    */
   };
 
   return (
     <div className="min-h-screen bg-gradient-calm flex items-center justify-center p-4">
       <Card className="card-therapy w-full max-w-md p-6">
+        {/* --- No changes needed in the JSX below this line --- */}
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={onBack}
@@ -198,7 +194,7 @@ const Login = ({ onBack, onNavigateToRegister, onLoginSuccess }: LoginProps) => 
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1234567890"
+                placeholder="+91 12345 67890"
                 required
               />
             </div>
