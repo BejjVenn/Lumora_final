@@ -17,7 +17,7 @@ interface AIChatProps {
 }
 
 // --- API and Model Initialization (Secure) ---
-const apiKey = "AIzaSyDzhRueGH0JhbHgFRdOa12-Jg_MwFEe4F8";
+const apiKey = "AIzaSyDi51SkhtP1SJwJvsNl6vPYmUssrvL32DY";
 if (!apiKey) {
   throw new Error("VITE_GEMINI_API_KEY is not set in the environment variables");
 }
